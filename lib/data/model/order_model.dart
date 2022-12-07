@@ -7,15 +7,14 @@ class OrderModel {
   final String userId;
   final String orderStatus;
 
-  OrderModel({
-    required this.orderId,
-    required this.productId,
-    required this.count,
-    required this.totalPrice,
-    required this.createdAt,
-    required this.userId,
-    required this.orderStatus
-  });
+  OrderModel(
+      {required this.orderId,
+      required this.productId,
+      required this.count,
+      required this.totalPrice,
+      required this.createdAt,
+      required this.userId,
+      required this.orderStatus});
 
   factory OrderModel.fromJson(Map<String, dynamic> json) {
     return OrderModel(
@@ -27,5 +26,17 @@ class OrderModel {
       userId: json['user_id'] as String? ?? "",
       orderStatus: json['order_status'] as String? ?? "",
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'order_id': orderId,
+      'product_id': productId,
+      'count': count,
+      'total_price': totalPrice,
+      'created_at': createdAt,
+      'user_id': userId,
+      'order_status': orderId,
+    };
   }
 }

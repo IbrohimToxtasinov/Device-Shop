@@ -25,7 +25,7 @@ class ProductModel {
     return ProductModel(
       productId: json['product_id'] as String? ?? "",
       categoryId: json['category_id'] as String? ?? "",
-      shopId: json['shopId'] as String? ?? "",
+      shopId: json['shop_id'] as String? ?? "",
       productImages: (json["product_images"] as List<dynamic>?) ?? [],
       price: json['price'] as int? ?? 0,
       count: json['count'] as int? ?? 0,
@@ -33,5 +33,18 @@ class ProductModel {
       createdAt: json['created_at'] as String? ?? "",
       currency: json['currency'] as String? ?? "",
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product_id': productId,
+      'category_id': categoryId,
+      'shop_id': shopId,
+      'price': price,
+      'count': count,
+      'description': description,
+      'created_at': createdAt,
+      'currency': currency,
+    };
   }
 }

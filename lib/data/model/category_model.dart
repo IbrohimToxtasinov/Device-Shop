@@ -22,4 +22,14 @@ class CategoryModel {
       createdAt: json['created_at'] as String? ?? "",
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'category_id': categoryId,
+      'category_name': categoryName,
+      'description': description,
+      'image_url': imageUrl,
+      'created_at': createdAt,
+    };
+  }
 }
