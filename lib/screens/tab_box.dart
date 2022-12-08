@@ -25,6 +25,7 @@ class _TabBoxState extends State<TabBox> {
 
   @override
   Widget build(BuildContext context) {
+    print("Date Time Now : ${DateTime.now()}");
     var index = context.watch<TabViewModel>().activePageIndex;
     print(DateTime.now().toString());
     return Scaffold(

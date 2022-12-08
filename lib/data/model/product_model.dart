@@ -8,6 +8,7 @@ class ProductModel {
   final String description;
   final String createdAt;
   final String currency;
+  final String productName;
 
   ProductModel({
     required this.productId,
@@ -19,6 +20,7 @@ class ProductModel {
     required this.description,
     required this.createdAt,
     required this.currency,
+    required this.productName,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class ProductModel {
       description: json['description'] as String? ?? "",
       createdAt: json['created_at'] as String? ?? "",
       currency: json['currency'] as String? ?? "",
+      productName: json['product_name'] as String? ?? "",
     );
   }
 
@@ -41,10 +44,12 @@ class ProductModel {
       'category_id': categoryId,
       'shop_id': shopId,
       'price': price,
+      "product_images" : productImages,
       'count': count,
       'description': description,
       'created_at': createdAt,
       'currency': currency,
+      "product_name" : productName,
     };
   }
 }

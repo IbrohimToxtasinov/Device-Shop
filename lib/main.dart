@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_shop/data/repositories/auth_repository.dart';
+import 'package:device_shop/data/repositories/product_repository.dart';
 import 'package:device_shop/screens/auth/auth_page.dart';
 import 'package:device_shop/screens/tab_box.dart';
 import 'package:device_shop/view_model/auth_view_model.dart';
 import 'package:device_shop/view_model/categories_view_model.dart';
+import 'package:device_shop/view_model/products_view_model.dart';
 import 'package:device_shop/view_model/tab_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,6 +23,11 @@ void main() async {
         ChangeNotifierProvider(
             create: (context) => CategoriesViewModel(
                     categoryRepository: CategoryRepository(
+                  firebaseFirestore: FirebaseFirestore.instance,
+                ))),
+        ChangeNotifierProvider(
+            create: (context) => ProductViewModel(
+                    productRepository: ProductRepository(
                   firebaseFirestore: FirebaseFirestore.instance,
                 ))),
         Provider(
