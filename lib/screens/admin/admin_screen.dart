@@ -17,7 +17,7 @@ class AdminScreen extends StatelessWidget {
             title: const Text("Products"),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => AllProductsScreen()));
+                  MaterialPageRoute(builder: (context) => const AllProductsScreen()));
             },
           ),
           ListTile(
@@ -26,7 +26,7 @@ class AdminScreen extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AllCategoriesScreen()));
+                      builder: (context) => const AllCategoriesScreen()));
             },
           ),
         ],

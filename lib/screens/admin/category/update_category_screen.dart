@@ -18,7 +18,7 @@ class _UpdateCategoryScreenState extends State<UpdateCategoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(" Update Category"),
+        title: const Text("Update Category"),
       ),
       body: Column(
         children: [

@@ -1,8 +1,8 @@
 import 'package:device_shop/utils/colors.dart';
+import 'package:device_shop/utils/styles.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MyTextFormFieldEmail extends StatelessWidget {
   final String imageName;
@@ -25,7 +25,7 @@ class MyTextFormFieldEmail extends StatelessWidget {
             const SizedBox(width: 13),
             Text(
               hintName,
-              style: GoogleFonts.raleway(
+              style: MyTextStyle.ralewaySemiBold.copyWith(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: MyColors.c868686),

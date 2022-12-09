@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 class ProductViewModel extends ChangeNotifier {
   final ProductRepository productRepository;
 
-  ProductViewModel({required this.productRepository});
+  ProductViewModel({required this.productRepository}) {
+    listenProducts();
+  }
 
   late StreamSubscription subscription;
 

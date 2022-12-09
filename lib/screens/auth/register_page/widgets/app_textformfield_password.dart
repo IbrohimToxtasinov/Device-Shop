@@ -1,7 +1,7 @@
 import 'package:device_shop/utils/colors.dart';
+import 'package:device_shop/utils/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class AppTextFormFieldPassword extends StatefulWidget {
   final String imageName;
@@ -36,7 +36,7 @@ class _AppTextFormFieldPasswordState extends State<AppTextFormFieldPassword> {
             const SizedBox(width: 13),
             Text(
               widget.hintName,
-              style: GoogleFonts.raleway(
+              style: MyTextStyle.ralewaySemiBold.copyWith(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: MyColors.c868686),
@@ -46,7 +46,7 @@ class _AppTextFormFieldPasswordState extends State<AppTextFormFieldPassword> {
         TextFormField(
           autovalidateMode: AutovalidateMode.onUserInteraction,
           validator: (password) => password != null && password.length < 6
-              ? "Enter at least 6 charcter !"
+              ? "Enter at least 6 character !"
               : null,
           controller: widget.controller,
           style: const TextStyle(color: Colors.black),
@@ -58,7 +58,7 @@ class _AppTextFormFieldPasswordState extends State<AppTextFormFieldPassword> {
                 onPressed: widget.onTap,
                 child: Text(
                   widget.suffixText,
-                  style: GoogleFonts.raleway(
+                  style: MyTextStyle.ralewaySemiBold.copyWith(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       color: MyColors.c5956E9),

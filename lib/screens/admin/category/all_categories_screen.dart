@@ -29,59 +29,45 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
               icon: Icon(Icons.add))
         ],
       ),
-      body: StreamBuilder<List<CategoryModel>>(
-        stream: Provider.of<CategoriesViewModel>(context, listen: false)
-            .listenCategories(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasData) {
-            List<CategoryModel> categories = snapshot.data!;
-            return ListView(
-              children: List.generate(categories.length, (index) {
-                CategoryModel category = categories[index];
-                return ListTile(
-                  title: Text(category.categoryName),
-                  trailing: SizedBox(
-                    width: 100,
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => UpdateCategoryScreen(
-                                    categoryModel: category,
-                                  ),
+      body: Consumer<CategoriesViewModel>(
+        builder: ((context, categoryViewModel, child) {
+          return ListView(
+            children: List.generate(categoryViewModel.categories.length, (index) {
+              CategoryModel category = categoryViewModel.categories[index];
+              return ListTile(
+                title: Text(category.categoryName),
+                trailing: SizedBox(
+                  width: 100,
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => UpdateCategoryScreen(
+                                  categoryModel: category,
                                 ),
-                              );
-                            },
-                            icon: const Icon(Icons.edit)),
-                        IconButton(
-                            onPressed: () {
-                              Provider.of<CategoriesViewModel>(context,
-                                      listen: false)
-                                  .deleteCategory(category.categoryId);
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.edit)),
+                      IconButton(
+                          onPressed: () {
+                            Provider.of<CategoriesViewModel>(context,
+                                    listen: false)
+                                .deleteCategory(category.categoryId);
 
-                              print("DELETING ID:${category.categoryId}");
-                            },
-                            icon: const Icon(Icons.delete)),
-                      ],
-                    ),
+                            print("DELETING ID:${category.categoryId}");
+                          },
+                          icon: const Icon(Icons.delete)),
+                    ],
                   ),
-                );
-              }),
-            );
-          } else {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          }
-        },
+                ),
+              );
+            }),
+          );
+        }),
       ),
     );
   }

@@ -1,5 +1,5 @@
+import 'package:device_shop/utils/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MyButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -28,7 +28,7 @@ class MyButton extends StatelessWidget {
         child: Center(
           child: Text(
             name,
-            style: GoogleFonts.raleway(
+            style: MyTextStyle.ralewayBold.copyWith(
                 fontSize: 20, fontWeight: FontWeight.w700, color: textColor),
           ),
         ),

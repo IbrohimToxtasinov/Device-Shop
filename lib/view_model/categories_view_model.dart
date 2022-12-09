@@ -8,14 +8,10 @@ class CategoriesViewModel extends ChangeNotifier {
   final CategoryRepository categoryRepository;
 
   CategoriesViewModel({required this.categoryRepository}) {
-   //listenCategories(); 
+    listenCategories();
   }
 
-  // Stream<List<CategoryModel>> listenCategories() =>
-  //   categoryRepository.getCategories();
-
-//! Ikkinchi usuli 
-late StreamSubscription subscription;
+  late StreamSubscription subscription;
 
   List<CategoryModel> categories = [];
 
@@ -31,11 +27,12 @@ late StreamSubscription subscription;
       categoryRepository.addCategory(categoryModel: categoryModel);
   updateCategory(CategoryModel categoryModel) =>
       categoryRepository.updateCategory(categoryModel: categoryModel);
-  deleteCategory(String docId) => categoryRepository.deleteCategory(doId: docId);
+  deleteCategory(String docId) =>
+      categoryRepository.deleteCategory(doId: docId);
 
-  // @override
-  // void dispose() {
-  //   subscription.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
+  }
 }
