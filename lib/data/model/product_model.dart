@@ -18,8 +18,6 @@ class ProductModel {
     required this.count,
     required this.description,
     required this.createdAt,
-    //ustoz productlar chiqdi //ui da muammo bor shekilli togrilang
-    //uida hmmasi togri provider filae hato beryapti
     required this.currency,
     required this.productName,
   });
@@ -29,8 +27,8 @@ class ProductModel {
       productId: json['product_id'] as String? ?? "",
       categoryId: json['category_id'] as String? ?? "",
       productImages: (json["product_images"] as List<dynamic>? ?? []),
-      price: json['price'] as int? ?? 0,//  ha boldi shuni togirlab koraychi oxshmasasa aytaman
-      count: json['count'] as int? ?? 0,//intku nega buni
+      price: json['price'] as int? ?? 0,
+      count: json['count'] as int? ?? 0,
       description: json['description'] as String? ?? "",
       createdAt: json['created_at'] as String? ?? "",
       currency: json['currency'] as String? ?? "",
@@ -43,12 +41,12 @@ class ProductModel {
       'product_id': productId,
       'category_id': categoryId,
       'price': price,
-      "product_images" : productImages,
+      "product_images": productImages,
       'count': count,
       'description': description,
       'created_at': createdAt,
       'currency': currency,
-      "product_name" : productName,
+      "product_name": productName,
     };
   }
 }

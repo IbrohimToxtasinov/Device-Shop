@@ -1,3 +1,4 @@
+import 'package:device_shop/screens/basket_page/basket_page.dart';
 import 'package:device_shop/screens/card_page/card_page.dart';
 import 'package:device_shop/screens/home_page/home_page.dart';
 import 'package:device_shop/screens/profile_page/profile_page.dart';
@@ -18,7 +19,7 @@ class _TabBoxState extends State<TabBox> {
   @override
   void initState() {
     screens.add(const HomePage());
-    screens.add(const CardPage());
+    screens.add(const CartPage());
     screens.add(const ProfilePage());
     super.initState();
   }

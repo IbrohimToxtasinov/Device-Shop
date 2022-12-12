@@ -50,5 +50,4 @@ class CategoryRepository {
                 .toList(),
           );
 
-  deleteProducts({required String doId}) {}
 }

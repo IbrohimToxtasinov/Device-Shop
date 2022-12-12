@@ -1,17 +1,18 @@
+import 'package:device_shop/data/model/product_model.dart';
+import 'package:device_shop/screens/product_page/widgets/button.dart';
+import 'package:device_shop/utils/colors.dart';
+import 'package:device_shop/utils/icon.dart';
+import 'package:device_shop/utils/styles.dart';
+import 'package:device_shop/view_model/order_view_model.dart';
+import 'package:device_shop/view_model/products_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:tech_ecommerce_app/data/my_cart.dart';
-import 'package:tech_ecommerce_app/models/purchase.dart';
-import 'package:tech_ecommerce_app/utils/colors.dart';
-import 'package:tech_ecommerce_app/utils/images.dart';
-import 'package:tech_ecommerce_app/widgets/build_button_widget.dart';
+import 'package:provider/provider.dart';
 
 class CartPage extends StatefulWidget {
-  final Purchase myData = Purchase(myCart);
-  CartPage({super.key});
+  const CartPage({super.key});
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -33,15 +34,13 @@ class _CartPageState extends State<CartPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                    onTap: () {},
-                    child: SvgPicture.asset(MyImages.iconArrowrLeft)),
+                    onTap: () {}, child: SvgPicture.asset(MyIcons.arrowLeft)),
                 Text("Basket",
-                    style: GoogleFonts.raleway(
+                    style: MyTextStyle.ralewayBold.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w700,
                         color: MyColors.c000000)),
-                InkWell(
-                    onTap: () {}, child: SvgPicture.asset(MyImages.iconDelete)),
+                InkWell(onTap: () {}, child: SvgPicture.asset(MyIcons.delete)),
               ],
             ),
           ),
@@ -58,13 +57,13 @@ class _CartPageState extends State<CartPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(MyImages.iconNotification),
+                  SvgPicture.asset(MyIcons.notification),
                   const SizedBox(
                     width: 6.5,
                   ),
                   Text(
                     "Delivery for FREE until the end of the month",
-                    style: GoogleFonts.raleway(
+                    style: MyTextStyle.sfProSemibold.copyWith(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
                         color: MyColors.c000000),
@@ -75,34 +74,25 @@ class _CartPageState extends State<CartPage> {
           ),
           const SizedBox(height: 12),
           SizedBox(
-            width: double.infinity,
-            height: MediaQuery.of(context).size.height * 0.535,
-            child: ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemCount: myCart.length,
-              itemBuilder: (context, int index) {
-                return buildCart(context,
-                    count: myCart.elementAt(index).count,
-                    name: myCart.elementAt(index).name,
-                    imageName: myCart.elementAt(index).imageName,
-                    price: myCart.elementAt(index).price, onAdd: () {
-                  setState(() {
-                    myCart.elementAt(index).count++;
-                  });
-                }, onMinus: () {
-                  setState(() {
-                    if (myCart.elementAt(index).count - 1 <= 0) {
-                      myCart.elementAt(index).count = 0;
-                      myCart.remove(myCart.elementAt(index));
-                    } else {
-                      myCart.elementAt(index).count--;
-                    }
-                  });
-                });
-              },
-            ),
-          ),
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height * 0.535,
+              child: Consumer<OrderViewModel>(
+                  builder: ((context, orderViewModel, child) {
+                return ListView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: orderViewModel.orders.length,
+                  itemBuilder: (context, int index) {
+                    ProductModel products = orderViewModel.listenOrdersProducts(orderViewModel.orders[index].productId);
+                    return Container(
+                      height: 50,
+                      width: 300,
+                      color: Colors.red,
+                      child: Text(products.productName),
+                    );
+                  },
+                );
+              }))),
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.only(right: 50, left: 53),
@@ -110,12 +100,12 @@ class _CartPageState extends State<CartPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("Total",
-                    style: GoogleFonts.raleway(
+                    style: MyTextStyle.ralewayRegular.copyWith(
                         fontSize: 17,
                         fontWeight: FontWeight.w400,
                         color: MyColors.c000000)),
-                Text("\$ ${widget.myData.getcost()}",
-                    style: GoogleFonts.raleway(
+                Text("\$ 400",
+                    style: MyTextStyle.ralewayBold.copyWith(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
                         color: MyColors.c5956E9)),
@@ -124,11 +114,8 @@ class _CartPageState extends State<CartPage> {
           ),
           const SizedBox(height: 51),
           Padding(
-            padding: const EdgeInsets.only(right: 50, bottom: 41, left: 50),
-            child: button(context, name: "Checkout", onTap: () {
-              
-            },)
-          ),
+              padding: const EdgeInsets.only(right: 50, bottom: 41, left: 50),
+              child: ButtonWidget(name: "Checkout", onTap: () {})),
         ],
       ),
     );
@@ -166,13 +153,13 @@ Widget buildCart(BuildContext context,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(name,
-                style: GoogleFonts.raleway(
+                style: MyTextStyle.ralewaySemiBold.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: MyColors.c000000)),
             const SizedBox(height: 12),
             Text("\$$price",
-                style: GoogleFonts.raleway(
+                style: MyTextStyle.ralewaySemiBold.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                     color: MyColors.c5956E9)),
@@ -182,7 +169,7 @@ Widget buildCart(BuildContext context,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text("Quantity",
-                    style: GoogleFonts.raleway(
+                    style: MyTextStyle.ralewayLight.copyWith(
                         fontSize: 13,
                         fontWeight: FontWeight.w300,
                         color: MyColors.c000000)),
@@ -200,7 +187,7 @@ Widget buildCart(BuildContext context,
                     ),
                     child: Center(
                         child: Text("-",
-                            style: GoogleFonts.raleway(
+                            style: MyTextStyle.ralewaySemiBold.copyWith(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: MyColors.cFFFFFF))),
@@ -209,7 +196,7 @@ Widget buildCart(BuildContext context,
                 const SizedBox(width: 7),
                 Text(
                   "$count",
-                  style: GoogleFonts.raleway(
+                  style: MyTextStyle.ralewaySemiBold.copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
                       color: MyColors.c000000),
@@ -228,7 +215,7 @@ Widget buildCart(BuildContext context,
                     ),
                     child: Center(
                         child: Text("+",
-                            style: GoogleFonts.raleway(
+                            style: MyTextStyle.ralewaySemiBold.copyWith(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,
                                 color: MyColors.cFFFFFF))),
@@ -242,3 +229,37 @@ Widget buildCart(BuildContext context,
     ),
   );
 }
+
+// import 'package:device_shop/data/model/order_model.dart';
+// import 'package:device_shop/view_model/order_view_model.dart';
+// import 'package:flutter/material.dart';
+// import 'package:provider/provider.dart';
+//
+// class AllOrderScreen extends StatefulWidget {
+//   const AllOrderScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   State<AllOrderScreen> createState() => _AllOrderScreenState();
+// }
+
+// class _AllOrderScreenState extends State<AllOrderScreen> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(title: const Text("Orders")),
+//       body: Consumer<OrderViewModel>(
+//         builder: ((context, orderViewModel, child) {
+//           return ListView(
+//             children: List.generate(orderViewModel.orders.length, (index) {
+//               OrderModel orders = orderViewModel.orders[index];
+//               return ListTile(
+//                 title: Text(orders.productId),
+//                 trailing: Text(orders.count.toString()),
+//               );
+//             }),
+//           );
+//         }),
+//       ),
+//     );
+//   }
+// }

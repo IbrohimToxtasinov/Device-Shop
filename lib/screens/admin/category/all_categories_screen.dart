@@ -26,7 +26,7 @@ class _AllCategoriesScreenState extends State<AllCategoriesScreen> {
                     MaterialPageRoute(
                         builder: (context) => AddCategoryScreen()));
               },
-              icon: Icon(Icons.add))
+              icon: const Icon(Icons.add))
         ],
       ),
       body: Consumer<CategoriesViewModel>(

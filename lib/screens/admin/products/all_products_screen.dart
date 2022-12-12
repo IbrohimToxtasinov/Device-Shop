@@ -55,12 +55,12 @@ class _AllProductsScreenState extends State<AllProductsScreen> {
                           },
                           icon: const Icon(Icons.edit)),
                       IconButton(
-                          onPressed: () {
-                            Provider.of<ProductViewModel>(context,
-                                    listen: false)
-                                .deleteProduct(products.categoryId);
-                          },
-                          icon: const Icon(Icons.delete)),
+                        onPressed: () {
+                          Provider.of<ProductViewModel>(context, listen: false)
+                              .deleteProduct(products.productId);
+                        },
+                        icon: const Icon(Icons.delete),
+                      ),
                     ],
                   ),
                 ),
