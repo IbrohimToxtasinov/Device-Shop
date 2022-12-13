@@ -13,3 +13,5 @@ class _CardPageState extends State<CardPage> {
     return Scaffold(appBar: AppBar(title: const Text("Card"),),);
   }
 }
+//hali yuqku bu page
+// baket pageda

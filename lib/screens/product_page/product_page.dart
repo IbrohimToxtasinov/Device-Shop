@@ -6,12 +6,12 @@ import 'package:device_shop/utils/colors.dart';
 import 'package:device_shop/utils/icon.dart';
 import 'package:device_shop/utils/styles.dart';
 import 'package:device_shop/view_model/order_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class ProductScreen extends StatefulWidget {
-
   final ProductModel getData;
 
   const ProductScreen({super.key, required this.getData});
@@ -125,7 +125,7 @@ class _ProductScreenState extends State<ProductScreen> {
                     ),
                     Padding(
                       padding:
-                      const EdgeInsets.only(top: 33, left: 13, right: 50),
+                          const EdgeInsets.only(top: 33, left: 13, right: 50),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -144,24 +144,47 @@ class _ProductScreenState extends State<ProductScreen> {
                     ),
                     const SizedBox(height: 32),
                     Padding(
-                        padding: const EdgeInsets.only(
-                            right: 50, left: 10, bottom: 30),
-                        child: ButtonWidget(
-                          name: "Add to basket",
-                          onTap: () {
-                            OrderModel orderModel = OrderModel(
+                      padding: const EdgeInsets.only(
+                          right: 50, left: 10, bottom: 30),
+                      child: ButtonWidget(
+                        name: "Add to basket",
+                        onTap: () {
+                          List<OrderModel> orders = Provider.of<OrderViewModel>(
+                                  context,
+                                  listen: false)
+                              .orders;
+
+                          List<OrderModel> exists = orders
+                              .where((e) =>
+                                  e.productId == widget.getData.productId)
+                              .toList();
+
+                          if (exists.isNotEmpty) {
+                            orders.forEach((element) {
+                              if (element.productId ==
+                                  widget.getData.productId) {
+                                Provider.of<OrderViewModel>(context,
+                                        listen: false)
+                                    .updateOrderIfExists(
+                                        productId: element.productId, count: 1);
+                              }
+                            });
+                          } else {
+                            Provider.of<OrderViewModel>(context, listen: false)
+                                .addOrder(
+                              OrderModel(
+                                count: 1,
+                                totalPrice: widget.getData.price * 1,
                                 orderId: "",
                                 productId: widget.getData.productId,
-                                count: 1,
-                                totalPrice: widget.getData.price,
+                                userId: FirebaseAuth.instance.currentUser!.uid,
+                                orderStatus: "ordered",
                                 createdAt: DateTime.now().toString(),
-                                userId: "",
-                                orderStatus: "");
-
-                            Provider.of<OrderViewModel>(
-                                context, listen: false)
-                                .addOrder(orderModel);
-                          },)
+                              ),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

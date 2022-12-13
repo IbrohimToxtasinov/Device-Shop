@@ -8,18 +8,29 @@ class ProductViewModel extends ChangeNotifier {
 
   ProductViewModel({required this.productRepository}) {
     listenProducts("");
+    listenAllProducts();
   }
 
   late StreamSubscription subscription;
+   late StreamSubscription allProductsSubs;
 
   List<ProductModel> products = [];
+  List<ProductModel> allProducts = [];
 
     listenProducts(String categoryId) async {
     subscription = productRepository
         .getProducts(categoryId: categoryId)
         .listen((allProducts) {
-      print("ALL PRODUCTS LENGTH:${allProducts.length}");
       products = allProducts;
+      notifyListeners();
+    });
+  }
+
+      listenAllProducts() async {
+    subscription = productRepository
+        .getAllProducts()
+        .listen((pr) {
+      allProducts = pr;
       notifyListeners();
     });
   }

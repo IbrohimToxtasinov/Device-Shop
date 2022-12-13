@@ -56,14 +56,11 @@ class OrderRepository {
                 .toList(),
           );
 
-  Stream<List<ProductModel>> getOrderProduct({required dynamic productId}) =>
-      _firestore
-          .collection("products")
-          .where("product_id", isEqualTo: productId)
-          .snapshots()
-          .map(
-            (querySnapshot) => querySnapshot.docs
-                .map((doc) => ProductModel.fromJson(doc.data()))
-                .toList(),
-          );
+  Future<ProductModel> getProductById({required dynamic productId})async{
+    
+   var data = await _firestore.collection("products").doc(productId).get();
+
+  return ProductModel.fromJson(data.data() as Map<String, dynamic>);
+         
+  }   
 }
