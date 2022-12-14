@@ -32,7 +32,11 @@ class _ProductScreenState extends State<ProductScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                SvgPicture.asset(MyIcons.arrowLeft),
+                InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: SvgPicture.asset(MyIcons.arrowLeft)),
                 SvgPicture.asset(MyIcons.heart),
               ],
             ),

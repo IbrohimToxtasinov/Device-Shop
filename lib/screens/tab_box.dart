@@ -1,5 +1,4 @@
-import 'package:device_shop/screens/basket_page/basket_page.dart';
-import 'package:device_shop/screens/card_page/card_page.dart';
+import 'package:device_shop/screens/basket_page/cart_page.dart';
 import 'package:device_shop/screens/home_page/home_page.dart';
 import 'package:device_shop/screens/profile_page/profile_page.dart';
 import 'package:device_shop/view_model/tab_view_model.dart';
@@ -26,9 +25,7 @@ class _TabBoxState extends State<TabBox> {
 
   @override
   Widget build(BuildContext context) {
-    print("Date Time Now : ${DateTime.now()}");
     var index = context.watch<TabViewModel>().activePageIndex;
-    print(DateTime.now().toString());
     return Scaffold(
       body: screens[index],
       bottomNavigationBar: BottomNavigationBar(
@@ -36,6 +33,7 @@ class _TabBoxState extends State<TabBox> {
             .changePageIndex(index),
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
+        currentIndex: index,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: ""),
           BottomNavigationBarItem(icon: Icon(Icons.shopping_cart), label: ""),

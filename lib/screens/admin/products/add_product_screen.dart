@@ -1,8 +1,11 @@
+import 'package:device_shop/data/services/file_ploader.dart';
 import 'package:device_shop/data/model/category_model.dart';
 import 'package:device_shop/data/model/product_model.dart';
+import 'package:device_shop/utils/my_utils.dart';
 import 'package:device_shop/view_model/categories_view_model.dart';
 import 'package:device_shop/view_model/products_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -13,15 +16,12 @@ class AddProductScreen extends StatefulWidget {
 }
 
 class _AddProductScreenState extends State<AddProductScreen> {
-
   final TextEditingController countController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  List<String> productImages = [
-    "https://www.pngitem.com/pimgs/m/183-1831803_laptop-collection-png-transparent-png.png",
-    "https://www.pngitem.com/pimgs/m/183-1831803_laptop-collection-png-transparent-png.png",
-  ];
+  final ImagePicker _picker = ImagePicker();
+  List<String> imageUrl = [];
   String categoryId = "";
   CategoryModel? categoryModel;
   String createdAt = DateTime.now().toString();
@@ -65,12 +65,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
               const SizedBox(height: 20),
               TextFormField(
                 controller: descriptionController,
-                maxLines: 10,
+                maxLines: 5,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Description',
                 ),
               ),
+              if (imageUrl.isNotEmpty)
+                Image.network(
+                  imageUrl[0],
+                  width: 200,
+                  height: 120,
+                ),
+              IconButton(
+                  onPressed: () {
+                    _showPicker(context);
+                  },
+                  icon: const Icon(Icons.upload)),
               const SizedBox(height: 20),
               ExpansionTile(
                 title: Text(selectedCurrency.isEmpty
@@ -105,10 +116,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
               ),
               TextButton(
                 onPressed: () {
+                  if (imageUrl.isEmpty) {
+                    MyUtils.getMyToast(message: "Image tanla!!!!");
+                    return;
+                  }
                   ProductModel productModel = ProductModel(
                     count: int.parse(countController.text),
                     price: int.parse(priceController.text),
-                    productImages: productImages,
+                    productImages: imageUrl,
                     categoryId: categoryId,
                     productId: "",
                     productName: nameController.text,
@@ -158,5 +173,59 @@ class _AddProductScreenState extends State<AddProductScreen> {
         );
       },
     );
+  }
+
+  void _showPicker(context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext bc) {
+          return SafeArea(
+            child: Wrap(
+              children: <Widget>[
+                ListTile(
+                    leading: const Icon(Icons.photo_library),
+                    title: const Text("Gallery"),
+                    onTap: () {
+                      _getFromGallery();
+                      Navigator.of(context).pop();
+                    }),
+                ListTile(
+                  leading: const Icon(Icons.photo_camera),
+                  title: const Text('Camera'),
+                  onTap: () {
+                    _getFromCamera();
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  _getFromGallery() async {
+    XFile? pickedFile = await _picker.pickImage(
+      maxWidth: 1000,
+      maxHeight: 1000,
+      source: ImageSource.gallery,
+    );
+    if (pickedFile != null) {
+      if (!mounted) return;
+      imageUrl.add(await FileUploader.imageUploader(pickedFile));
+      setState(() {});
+    }
+  }
+
+  _getFromCamera() async {
+    XFile? pickedFile = await _picker.pickImage(
+      maxWidth: 1920,
+      maxHeight: 2000,
+      source: ImageSource.camera,
+    );
+    if (pickedFile != null) {
+      if (!mounted) return;
+      imageUrl.add(await FileUploader.imageUploader(pickedFile));
+      setState(() {});
+    }
   }
 }

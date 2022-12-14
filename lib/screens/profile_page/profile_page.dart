@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:device_shop/screens/admin/admin_screen.dart';
 import 'package:device_shop/utils/icon.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -14,14 +15,13 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final ImagePicker _picker = ImagePicker();
-  XFile? _image;
   bool isLoading = false;
-  List<dynamic> images = [];
-
+  String imageUrl = "";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( resizeToAvoidBottomInset: true,
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: const Text("Home"),
         actions: [
@@ -48,13 +48,13 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
-              child: _image == null
+              child: imageUrl.isEmpty
                   ? Image.asset(
                       MyIcons.imageSample,
                       fit: BoxFit.cover,
                     )
-                  : Image.file(
-                      File(_image!.path),
+                  : Image.network(
+                      imageUrl,
                       fit: BoxFit.cover,
                     ),
             ),
@@ -69,6 +69,17 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+
+  Future<String> getDownloadUrl(XFile xFile) async {
+    String downloadUrl = "";
+    final storageRef = FirebaseStorage.instance.ref();
+    var imageRef = storageRef.child("images/${xFile.name}");
+    await imageRef.putFile(File(xFile.path));
+    downloadUrl = await imageRef.getDownloadURL();
+    print("DOWNLOAD URL: $downloadUrl");
+    return downloadUrl;
+  }
+
   void _showPicker(context) {
     showModalBottomSheet(
         context: context,
@@ -105,13 +116,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     if (pickedFile != null) {
       if (!mounted) return;
-      setState(() {
-        isLoading = true;
-      });
-      setState(() {
-        isLoading = false;
-        _image = pickedFile;
-      });
+      imageUrl = await getDownloadUrl(pickedFile);
+      setState(() {});
     }
   }
 
@@ -123,9 +129,8 @@ class _ProfilePageState extends State<ProfilePage> {
     );
     if (pickedFile != null) {
       if (!mounted) return;
-      setState(() {
-        _image = pickedFile;
-      });
+      imageUrl = await getDownloadUrl(pickedFile);
+      setState(() {});
     }
   }
 }

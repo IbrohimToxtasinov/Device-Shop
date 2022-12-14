@@ -1,5 +1,6 @@
 import 'package:device_shop/data/model/order_model.dart';
 import 'package:device_shop/data/model/product_model.dart';
+import 'package:device_shop/main.dart';
 import 'package:device_shop/screens/basket_page/widgets/cart_item_widgets.dart';
 import 'package:device_shop/screens/product_page/widgets/button.dart';
 import 'package:device_shop/utils/colors.dart';
@@ -32,7 +33,10 @@ class _CartPageState extends State<CartPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                    onTap: () {}, child: SvgPicture.asset(MyIcons.arrowLeft)),
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (builder) => const MainPage()));
+                    },
+                    child: SvgPicture.asset(MyIcons.arrowLeft)),
                 Text("Basket",
                     style: MyTextStyle.ralewayBold.copyWith(
                         fontSize: 18,
@@ -155,14 +159,14 @@ class _CartPageState extends State<CartPage> {
                             },
                             imageName: product.productImages,
                             productName: product.productName,
-                            productPrice:
-                                orderViewModel.orders[index].totalPrice,
+                            productPrice: product.price,
                           );
                         },
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(right: 50, left: 53, top: 12),
+                      padding:
+                          const EdgeInsets.only(right: 50, left: 53, top: 12),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:device_shop/data/model/order_model.dart';
 import 'package:device_shop/data/model/product_model.dart';
 import 'package:device_shop/data/repositories/order_repository.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderViewModel extends ChangeNotifier {
@@ -12,16 +11,14 @@ class OrderViewModel extends ChangeNotifier {
     listenOrders();
   }
 
-
-late StreamSubscription subscription;
- 
+  late StreamSubscription subscription;
 
   List<OrderModel> orders = [];
   ProductModel? productModel;
 
   getOrdersProducts(dynamic productId) async {
-      productModel = await  orderRepository.getProductById(productId: productId);
-      notifyListeners();
+    productModel = await orderRepository.getProductById(productId: productId);
+    notifyListeners();
   }
 
   listenOrders() async {
@@ -32,7 +29,7 @@ late StreamSubscription subscription;
       ..onError((er) {});
   }
 
-    updateOrderIfExists({
+  updateOrderIfExists({
     required String productId,
     required int count,
   }) {
@@ -55,8 +52,7 @@ late StreamSubscription subscription;
       orderRepository.addOrder(orderModel: orderModel);
   updateOrder(OrderModel orderModel) =>
       orderRepository.updateOrder(orderModel: orderModel);
-  deleteOrder(String docId) =>
-      orderRepository.deleteOrder(docId: docId);
+  deleteOrder(String docId) => orderRepository.deleteOrder(docId: docId);
 
   @override
   void dispose() {
