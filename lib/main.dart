@@ -2,12 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_shop/data/repositories/auth_repository.dart';
 import 'package:device_shop/data/repositories/order_repository.dart';
 import 'package:device_shop/data/repositories/product_repository.dart';
+import 'package:device_shop/data/repositories/profile_repository.dart';
 import 'package:device_shop/screens/auth/auth_page.dart';
 import 'package:device_shop/screens/tab_box.dart';
 import 'package:device_shop/view_model/auth_view_model.dart';
 import 'package:device_shop/view_model/categories_view_model.dart';
 import 'package:device_shop/view_model/order_view_model.dart';
 import 'package:device_shop/view_model/products_view_model.dart';
+import 'package:device_shop/view_model/profile_view_model.dart';
 import 'package:device_shop/view_model/tab_view_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,8 +30,13 @@ void main() async {
                   firebaseFirestore: FirebaseFirestore.instance,
                 ))),
         ChangeNotifierProvider(
+            create: (context) => ProfileViewModel(
+                profileRepository: ProfileRepository(
+                    firebaseFirestore: FirebaseFirestore.instance),
+                firebaseAuth: FirebaseAuth.instance)),
+        ChangeNotifierProvider(
             create: (context) => OrderViewModel(
-                orderRepository: OrderRepository(
+                    orderRepository: OrderRepository(
                   firebaseFirestore: FirebaseFirestore.instance,
                 ))),
         ChangeNotifierProvider(
@@ -56,7 +63,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        highlightColor: Colors.white,splashColor:  const Color(0xffffffff),
+        highlightColor: Colors.white,
+        splashColor: const Color(0xffffffff),
       ),
       home: const MainPage(),
     );

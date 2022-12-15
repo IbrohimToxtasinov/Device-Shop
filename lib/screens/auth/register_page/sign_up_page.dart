@@ -1,3 +1,4 @@
+import 'package:device_shop/data/model/user_model.dart';
 import 'package:device_shop/screens/auth/register_page/widgets/app_texformfield_email.dart';
 import 'package:device_shop/screens/auth/register_page/widgets/app_textformfield_password.dart';
 import 'package:device_shop/screens/auth/register_page/widgets/app_textformfield_username.dart';
@@ -6,6 +7,9 @@ import 'package:device_shop/utils/colors.dart';
 import 'package:device_shop/utils/icon.dart';
 import 'package:device_shop/utils/styles.dart';
 import 'package:device_shop/view_model/auth_view_model.dart';
+import 'package:device_shop/view_model/profile_view_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -122,15 +126,26 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  signUp() {
+  signUp() async {
     final isValid = _formKey.currentState!.validate();
     if (!isValid) return;
-
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
-    Provider.of<AuthViewModel>(context, listen: false).signUp(
+  await  Provider.of<AuthViewModel>(context, listen: false).signUp(
       email: email,
       password: password,
+    );
+    if(!mounted) return;
+    await Provider.of<ProfileViewModel>(context, listen: false).addUser(
+      UserModel(
+        fcmToken: "",
+        age: 18,
+        userId: "",
+        fullName: usernameController.text,
+        email: email,
+        createdAt: DateTime.now().toString(),
+        imageUrl: "",
+      ),
     );
   }
 
