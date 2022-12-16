@@ -6,8 +6,10 @@ class UserModel {
   final int age;
   final String createdAt;
   final String fcmToken;
+  final String firebaseUid;
 
   UserModel({
+    required this.firebaseUid,
     required this.userId,
     required this.imageUrl,
     required this.fullName,
@@ -26,6 +28,7 @@ class UserModel {
       age: json['age'] as int? ?? 0,
       createdAt: json['created_at'] as String? ?? "",
       fcmToken: json['fcm_token'] as String? ?? "",
+      firebaseUid: json['firebaseUid'] as String? ?? "",
     );
   }
 
@@ -38,6 +41,7 @@ class UserModel {
       'age': age,
       'created_at': createdAt,
       'fcm_token': fcmToken,
+      'firebaseUid': firebaseUid,
     };
   }
 }

@@ -10,26 +10,41 @@ class ProfileRepository {
 
   Future<void> addUser({required UserModel userModel}) async {
     try {
-      var newUser =
+      DocumentReference newUser =
           await _firestore.collection("users").add(userModel.toJson());
-      await _firestore.collection("users").doc(newUser.id).update({
-        "user_id": newUser.id,
-      });
-      MyUtils.getMyToast(message: "User muvaffaqiyatli qo'shildi");
-    } on FirebaseException catch (error) {
-      MyUtils.getMyToast(message: error.message.toString());
+      await _firestore
+          .collection("users")
+          .doc(newUser.id)
+          .update({"user_id": newUser.id});
+      MyUtils.getMyToast(message: "User muvaffaqiyatli qo'shildi!");
+    } on FirebaseException catch (er) {
+      MyUtils.getMyToast(message: er.message.toString());
     }
   }
 
-  Future<void> updateFCMToken(
-      {required String fcmToken, required String docId}) async {
+  Future<void> updateUserFCMToken(
+      {required String fcmToken, required String userId}) async {
     try {
-      await _firestore.collection("users").doc(docId).update({
+      await _firestore.collection("users").doc(userId).update({
         "fcm_token": fcmToken,
       });
-      MyUtils.getMyToast(message: "Token olindi");
-    } on FirebaseException catch (error) {
-      MyUtils.getMyToast(message: error.message.toString());
+    } on FirebaseException catch (er) {
+      MyUtils.getMyToast(message: er.message.toString());
     }
+  }
+
+  Future<UserModel?> getSingleUser({required String firebaseUid}) async {
+    UserModel? userModel;
+    _firestore
+        .collection("users")
+        .where("firebaseUid", isEqualTo: firebaseUid)
+        .snapshots()
+        .map(
+          (event1) => event1.docs.map((doc) => UserModel.fromJson(doc.data())).toList(),
+        )
+        .listen((event) {
+      userModel = event.first;
+    });
+    return userModel;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_shop/data/repositories/auth_repository.dart';
+import 'package:device_shop/data/repositories/categories_repository.dart';
 import 'package:device_shop/data/repositories/order_repository.dart';
 import 'package:device_shop/data/repositories/product_repository.dart';
 import 'package:device_shop/data/repositories/profile_repository.dart';
@@ -15,41 +16,51 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'data/repositories/categories_repository.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FirebaseMessaging.instance.subscribeToTopic("users");
+  var fireStore = FirebaseFirestore.instance;
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => TabViewModel()),
         ChangeNotifierProvider(
-            create: (context) => CategoriesViewModel(
-                    categoryRepository: CategoryRepository(
-                  firebaseFirestore: FirebaseFirestore.instance,
-                ))),
+          create: (context) => CategoriesViewModel(
+            categoryRepository: CategoryRepository(
+              firebaseFirestore: fireStore,
+            ),
+          ),
+        ),
         ChangeNotifierProvider(
-            create: (context) => ProfileViewModel(
-                profileRepository: ProfileRepository(
-                    firebaseFirestore: FirebaseFirestore.instance),
-                firebaseAuth: FirebaseAuth.instance)),
+          create: (context) => ProductViewModel(
+            productRepository: ProductRepository(
+              firebaseFirestore: fireStore,
+            ),
+          ),
+        ),
         ChangeNotifierProvider(
-            create: (context) => OrderViewModel(
-                    orderRepository: OrderRepository(
-                  firebaseFirestore: FirebaseFirestore.instance,
-                ))),
+          create: (context) => OrderViewModel(
+            orderRepository: OrderRepository(
+              firebaseFirestore: fireStore,
+            ),
+          ),
+        ),
         ChangeNotifierProvider(
-            create: (context) => ProductViewModel(
-                    productRepository: ProductRepository(
-                  firebaseFirestore: FirebaseFirestore.instance,
-                ))),
+          create: (context) => ProfileViewModel(
+            firebaseAuth: FirebaseAuth.instance,
+            profileRepository: ProfileRepository(firebaseFirestore: fireStore)
+          ),
+        ),
         Provider(
-            create: (context) => AuthViewModel(
-                authRepository:
-                    AuthRepository(firebaseAuth: FirebaseAuth.instance)))
+          create: (context) => AuthViewModel(
+            authRepository: AuthRepository(firebaseAuth: FirebaseAuth.instance),
+          ),
+        )
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -63,10 +74,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        highlightColor: Colors.white,
-        splashColor: const Color(0xffffffff),
+        primarySwatch: Colors.blue,
       ),
-      home: const MainPage(),
+      home: MainPage(),
     );
   }
 }
@@ -80,9 +90,9 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.hasData) {
-            return const TabBox();
+            return TabBox();
           } else {
-            return const AuthPage();
+            return AuthPage();
           }
         });
   }

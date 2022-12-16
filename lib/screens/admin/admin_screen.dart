@@ -16,8 +16,10 @@ class AdminScreen extends StatelessWidget {
           ListTile(
             title: const Text("Products"),
             onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const AllProductsScreen()));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AllProductsScreen()));
             },
           ),
           ListTile(

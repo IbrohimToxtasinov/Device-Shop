@@ -1,3 +1,4 @@
+import 'package:device_shop/data/model/user_model.dart';
 import 'package:device_shop/screens/basket_page/cart_page.dart';
 import 'package:device_shop/screens/home_page/home_page.dart';
 import 'package:device_shop/screens/profile_page/profile_page.dart';
@@ -18,14 +19,6 @@ class TabBox extends StatefulWidget {
 class _TabBoxState extends State<TabBox> {
   List<Widget> screens = [];
 
-  _printFCMToken() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    await Provider.of<ProfileViewModel>(context, listen: false).updateFCMToken(
-        docId: 
-        fcmToken: token.toString());
-    print("FCM TOKEN : $token");
-  }
-
   @override
   void initState() {
     screens.add(const HomePage());
@@ -33,6 +26,20 @@ class _TabBoxState extends State<TabBox> {
     screens.add(const ProfilePage());
     _printFCMToken();
     super.initState();
+  }
+
+  _printFCMToken() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    if (!mounted) return;
+    UserModel? userModel =
+        await Provider.of<ProfileViewModel>(context, listen: false).fetchUser();
+
+    if (userModel != null) {
+      await Provider.of<ProfileViewModel>(context, listen: false)
+          .updateFCMToken(userId: userModel.userId, fcmToken: token ?? "");
+    }
+
+    print("FCM TOKEN:$token");
   }
 
   @override
